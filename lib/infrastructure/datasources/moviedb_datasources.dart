@@ -6,23 +6,23 @@ import 'package:moviepedia/infrastructure/mappers/movie_mappers.dart';
 import 'package:moviepedia/infrastructure/models/moviedb/moviedb_response.dart';
 
 class MovieDbDataSource extends MoviesDatasource {
-  final dio = Dio(BaseOptions(
+  final dio = 
+  Dio(BaseOptions(
       baseUrl: 'https://api.themoviedb.org/3',
-      queryParameters: {
-        'api-key': Environment.movieDbKey,
-        'languaje': 'es-MX'
-      }));
+      queryParameters: {'languaje': 'es-MX'},
+      headers: {'Authorization': 'Bearer ${Environment.movieDbToken}'},
+      )
+      );
 
   @override
   Future<List<Movie>> getNowPlaying({int page = 1}) async {
-    final response = await dio.get('/movie/now/playing');
+    final response =await dio.get('/movie/now_playing');
 
     final movieDbResponse = MovieDbResponse.fromJson(response.data);
 
     final List<Movie> movies = movieDbResponse.results
       .where((moviedb) => moviedb.posterPath != 'no-poster')
-      .map(
-      (moviedb) => MovieMapper.movieDBToEntity(moviedb)
+      .map((moviedb) => MovieMapper.movieDBToEntity(moviedb)
       ).toList();
 
     return movies;
