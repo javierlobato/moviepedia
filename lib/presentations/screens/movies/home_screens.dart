@@ -32,6 +32,17 @@ class _HomeViewState extends ConsumerState<_HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
+
+    if (nowPlayingMovies.length == 0) return Center(child: CircularProgressIndicator());
+
+    return ListView.builder(
+        itemCount: nowPlayingMovies.length,
+        itemBuilder: (context, index) {
+          final movie = nowPlayingMovies[index];
+          return ListTile(
+            title: Text(movie.title),
+          );
+        });
   }
 }
